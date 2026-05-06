@@ -23,9 +23,13 @@ for url in urls:
 
     time.sleep(3)
 
+    # Scroll so dynamic job listings can load on pages that render after the initial load
+    #driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    #time.sleep(2)
+
     job_links = driver.find_elements(By.TAG_NAME, "a")
 
-    keywords = ["intern", "co-op", "coop" , "Co-op/Intern", "Student"]
+    keywords = ["intern", "co-op", "coop", "co-op/intern", "student"]
 
     for job in job_links:
         text = job.text.strip().lower()
