@@ -2,12 +2,16 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 driver = webdriver.Chrome()
 
 #create specific kinaxis and nokia scrappers
 
 
 #Specifically Target Ottawa companies such as Kinaxis, Ciena, Ericcson, Ross Video, OXARA
+#Stores key value pairs
 #This holds list of carrer pages for companies in ottawa
 sites = [
     {
@@ -78,12 +82,56 @@ sites = [
 ]
 
 #GENERIC SCRAPER
-for url in urls:
+for site in sites:
+
+    #access the key-value pair
+    company = site["company"]
+    platform = site["platform"]
+    url = site["url"]
+
     driver.get(url)
 
     time.sleep(3)
+    
 
-    if(urls[url] == )
+
+    #If the company is kinaxis run this scrapper
+    if company == "Kinaxis":
+
+        print("Scraping Kinaxis...")
+        print("Current URL:", driver.current_url)
+        print("Title:", driver.title)
+
+        # wait for iframe
+        iframe = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.TAG_NAME, "iframe"))
+        )
+
+        # switch into iframe
+        driver.switch_to.frame(iframe)
+
+        job_links = WebDriverWait(driver, 20).until(
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "li.iCIMS_JobCardItem div.title a")
+            )
+        )
+
+        print("Kinaxis jobs found:", len(job_links))
+
+        for job in job_links:
+            title = job.text.strip()
+            link = job.get_attribute("href")
+
+            print(title)
+            print(link)
+            print()
+
+        # switch back to main page after done
+        driver.switch_to.default_content()
+
+        continue
+
+
 
     # Scroll so dynamic job listings can load on pages that render after the initial load
     #driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -105,9 +153,6 @@ for url in urls:
 
 time.sleep(5)
 
-
-#kinaxis scrapper
-class="iCIMS_JobCardItem"
 
 
 driver.quit()
