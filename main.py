@@ -96,24 +96,22 @@ for site in sites:
 
 
     #If the company is kinaxis run this scrapper
+    #everything is in iframe 
     if company == "Kinaxis":
 
-        print("Scraping Kinaxis...")
-        print("Current URL:", driver.current_url)
-        print("Title:", driver.title)
-
-        # wait for iframe
         iframe = WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.TAG_NAME, "iframe"))
+            EC.presence_of_element_located((By.ID, "icims_content_iframe"))
         )
 
-        # switch into iframe
         driver.switch_to.frame(iframe)
 
-        job_links = WebDriverWait(driver, 20).until(
-            EC.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, "li.iCIMS_JobCardItem div.title a")
-            )
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_all_elements_located((By.TAG_NAME, "a"))
+        )
+
+        job_links = driver.find_elements(
+            By.CSS_SELECTOR,
+            "a[href*='/jobs/'][href*='/job']"
         )
 
         print("Kinaxis jobs found:", len(job_links))
@@ -122,11 +120,11 @@ for site in sites:
             title = job.text.strip()
             link = job.get_attribute("href")
 
-            print(title)
-            print(link)
-            print()
+            if title:
+                print(title)
+                print(link)
+                print()
 
-        # switch back to main page after done
         driver.switch_to.default_content()
 
         continue
