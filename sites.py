@@ -2,6 +2,13 @@
 #Stores key value pairs
 #This holds list of carrer pages for companies in ottawa
 sites = [
+
+    {
+        "company": "Nokia",
+        "platform": "Oracle",
+        "url": "https://jobs.nokia.com/en/sites/CX_1/jobs?lastSelectedFacet=POSTING_DATES&location=Ottawa%2C+Ontario%2C+Canada&locationId=100000018991137&locationLevel=city&mode=location&radius=25&radiusUnit=MI&selectedLocationsFacet=300000000471544&selectedPostingDatesFacet=7&selectedTitlesFacet=TRA"
+    },
+    
     {
         "company": "Kinaxis",
         "platform": "ICIMS",
@@ -20,11 +27,6 @@ sites = [
         "url": "https://ciena.wd5.myworkdayjobs.com/Careers?q=Intern&Location_Country=a30a87ed25634629aa6c3958aa2b91ea"
     },
 
-    {
-        "company": "Nokia",
-        "platform": "Oracle",
-        "url": "https://jobs.nokia.com/en/sites/CX_1/jobs?lastSelectedFacet=LOCATIONS&location=Ottawa%2C+Ontario%2C+Canada&locationId=100000018991137&locationLevel=city&mode=location&radius=25&radiusUnit=MI&selectedLocationsFacet=300000000471544&selectedTitlesFacet=TRA"
-    },
 
     {
         "company": "Ross Video",
