@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from constants import KEYWORDS
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -27,8 +28,6 @@ def icims(driver):
 
         print("Kinaxis jobs found:", len(job_links))
 
-        keywords = ["intern", "co-op/intern", "co-op", "coop"]
-
 
         #loop through job links
         for job in job_links:
@@ -39,7 +38,7 @@ def icims(driver):
             #use this for the print
             title_lower = title.lower()
 
-            if any(keyword in title_lower for keyword in keywords):
+            if any(keyword in title_lower for keyword in KEYWORDS):
                 print(title)
                 print(link)
                 print()

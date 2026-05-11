@@ -25,10 +25,18 @@ def oracle(driver, company):
         #grab job links
         job_links = driver.find_elements(By.CSS_SELECTOR, "a.job-grid-item__link")
 
-        #targets div with this class name
-        job_titles = driver.find_elements(By.CSS_SELECTOR, "div.job-grid-item__content")
+        for job in job_links:
+            #parent
+            title = WebDriverWait(driver,20).until(EC.presence_of_element_located(By.CLASS_NAME, "div.job-grid-item__link"))
 
-        for jobs in job_links:
+            link = job.get_attribute("href")
+
+            if title and link:
+                
+
+
+            
+
             
 
    
