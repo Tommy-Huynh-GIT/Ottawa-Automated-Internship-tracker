@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from constants import KEYWORDS
 #imported data set from sites.py
 from sites import sites
 from scrapers.general import generalScrapper
@@ -14,7 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 def oracle(driver, company):
     print(f"NOW SCRAPING {company}!")
     print("====================================")
-    
+
     if company == "Nokia":
 
         #wait for all links
@@ -40,10 +41,11 @@ def oracle(driver, company):
             link = job.get_attribute("href")
 
             if title and link:
-                print(title)
-                print(link)
-                print()
-            
+                if KEYWORDS.search(title):
+                    print(title)
+                    print(link)
+                    print()
+                
 
             
 

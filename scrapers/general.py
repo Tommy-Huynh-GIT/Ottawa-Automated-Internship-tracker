@@ -5,7 +5,13 @@ from constants import KEYWORDS
 def generalScrapper(driver, company):
     print(f"NOW SCRAPING {company}!")
     print("====================================")
-    job_links = driver.find_elements(By.TAG_NAME, "a")
+
+    if(company == "General Dynamics"):
+        #anchor tags that hold the right links don't have classes
+        job_links = driver.find_elements(By.CSS_SELECTOR, "a:not([class])")
+        
+    else:
+        job_links = driver.find_elements(By.TAG_NAME, "a")
 
     for job in job_links:
         text = job.text.strip().lower()

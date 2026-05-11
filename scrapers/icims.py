@@ -37,10 +37,8 @@ def icims(driver, company):
             title = job.text.replace("Title", "").strip()
             link = job.get_attribute("href")
 
-            #use this for the print
-            title_lower = title.lower()
 
-            if any(keyword in title_lower for keyword in KEYWORDS):
+            if KEYWORDS.search(title):
                 print(title)
                 print(link)
                 print()
