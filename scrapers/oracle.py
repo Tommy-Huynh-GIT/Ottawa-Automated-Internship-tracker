@@ -11,19 +11,24 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def oracle(driver):
+def oracle(driver, company):
 
-    job_links = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.TAG_NAME, "a")))
-    
-    keywords = ["intern", "co-op", "coop", "co-op/intern", "student"]
+    if company == "Nokia":
 
-    for job in job_links:   
+        #wait for links
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "a.job-grid-item__link")
+            )
+        )
 
-        text = job.text.strip().lower()
-        link = job.get_attribute("href")
+        #grab job links
+        job_links = driver.find_elements(By.CSS_SELECTOR, "a.job-grid-item__link")
 
-        if text and link:
-            if any(k in text for k in keywords):
-                print(job.text)
-                print(link)
-                print()
+        #targets div with this class name
+        job_titles = driver.find_elements(By.CSS_SELECTOR, "div.job-grid-item__content")
+
+        for jobs in job_links:
+            
+
+   
