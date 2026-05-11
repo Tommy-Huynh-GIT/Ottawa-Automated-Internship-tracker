@@ -32,7 +32,7 @@ for site in sites:
 
     #If the company is kinaxis run this scrapper
     #everything is in iframe 
-    if company == "Kinaxis":
+    if platform == "ICIMS":
 
         icims(driver)
         
@@ -41,7 +41,11 @@ for site in sites:
 
         continue
 
+    if platform == "Oracle":
 
+        oracle(driver, company)
+
+        continue
 
 
 
