@@ -12,7 +12,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 def oracle(driver, company):
-
+    print(f"NOW SCRAPING {company}!")
+    print("====================================")
+    
     if company == "Nokia":
 
         #wait for all links

@@ -2,7 +2,9 @@ from selenium.webdriver.common.by import By
 from constants import KEYWORDS
 
 
-def generalScrapper(driver):
+def generalScrapper(driver, company):
+    print(f"NOW SCRAPING {company}!")
+    print("====================================")
     job_links = driver.find_elements(By.TAG_NAME, "a")
 
     for job in job_links:
@@ -10,7 +12,7 @@ def generalScrapper(driver):
         link = job.get_attribute("href")
 
         if text and link:
-            if any(k in text for k in KEYWORDS):
+            if KEYWORDS.search(text):
                 print(job.text)
                 print(link)
                 print()

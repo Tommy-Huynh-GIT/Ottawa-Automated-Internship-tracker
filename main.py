@@ -34,7 +34,7 @@ for site in sites:
     #everything is in iframe 
     if platform == "ICIMS":
 
-        icims(driver)
+        icims(driver, company)
         
         #switch back to main page
         driver.switch_to.default_content()
@@ -53,7 +53,7 @@ for site in sites:
     # Scroll so dynamic job listings can load on pages that render after the initial load
     #driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     #time.sleep(2)
-    generalScrapper(driver)
+    generalScrapper(driver, company)
 
     
 

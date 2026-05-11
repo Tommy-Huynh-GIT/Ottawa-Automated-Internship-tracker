@@ -5,8 +5,10 @@ from constants import KEYWORDS
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-def icims(driver):
-        
+def icims(driver, company):
+    print(f"NOW SCRAPING {company}!")
+    print("====================================")
+    if company == "Kinaxis":
       #load iframe first, check for 20 seconds until it exists
         iframe = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.ID, "icims_content_iframe"))
