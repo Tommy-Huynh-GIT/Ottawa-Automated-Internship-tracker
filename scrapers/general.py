@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 from constants import KEYWORDS
+from database.postgres import save_job
 
 
 def generalScrapper(driver, company):
@@ -14,11 +15,10 @@ def generalScrapper(driver, company):
         job_links = driver.find_elements(By.TAG_NAME, "a")
 
     for job in job_links:
-        text = job.text.strip().lower()
+        title = job.text.strip().lower()
         link = job.get_attribute("href")
 
-        if text and link:
-            if KEYWORDS.search(text):
-                print(job.text)
-                print(link)
-                print()
+        if title and link:
+            if KEYWORDS.search(title):
+                #Push to database
+                save_job(link, title, company)

@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from constants import KEYWORDS
+from database.postgres import save_job
+
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -39,6 +41,5 @@ def icims(driver, company):
 
 
             if KEYWORDS.search(title):
-                print(title)
-                print(link)
-                print()
+                #Push to database
+                save_job(link, title, company)

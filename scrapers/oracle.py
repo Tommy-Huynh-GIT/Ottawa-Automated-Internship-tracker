@@ -3,6 +3,9 @@ from selenium.webdriver.common.by import By
 from constants import KEYWORDS
 #imported data set from sites.py
 from sites import sites
+from database.postgres import save_job
+
+
 from scrapers.general import generalScrapper
 from scrapers.icims import icims
 
@@ -42,9 +45,8 @@ def oracle(driver, company):
 
             if title and link:
                 if KEYWORDS.search(title):
-                    print(title)
-                    print(link)
-                    print()
+                    #Push to database
+                    save_job(link,title, company)
                 
 
             
