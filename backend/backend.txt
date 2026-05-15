@@ -1,0 +1,12 @@
+Most likely only using GET request here since we dont want the user to change anything
+
+
+
+Example Routes: 
+
+    #Return all jobs and optional query parameter for if specific company is needed
+    GET /jobs
+
+
+    #Return all companies for the dropdown
+    Get /companies
