@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 #imported data set from sites.py
 from sites import sites
+from database.postgres import create_tables
 from scrapers.general import generalScrapper
 from scrapers.icims import icims
 from scrapers.oracle import oracle
@@ -10,6 +11,8 @@ import time
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+create_tables()
 
 driver = webdriver.Chrome()
 
