@@ -59,7 +59,7 @@ def get_company():
     cur = conn.cursor()
 
     #select all companies
-    cur.execute("""SELECT company FROM JOB
+    cur.execute("""SELECT DISTINCT company FROM job ORDER BY company
 """)
     
     rows = cur.fetchall()
@@ -68,7 +68,7 @@ def get_company():
 
     for row in rows:
         companies.append({
-            "title" : row[0]
+            "company" : row[0]
         })
 
     return companies
