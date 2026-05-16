@@ -1,10 +1,20 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from database.postgres import get_connection 
 
 
 app = FastAPI()
+
+#Need this since my backend and frontend run on different ports
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
@@ -22,9 +32,10 @@ def get_jobs(company: str | None = None):
 
     if company:
         #select specific company
-        cur.execute("""SELECT * FROM job WHERE company = %s,
-        (company,)
-""")
+        cur.execute(
+            """SELECT * FROM job WHERE company = %s""",
+            (company,)
+        )
     else:
         #select all jobs
         cur.execute("""SELECT * from job""")
@@ -64,6 +75,9 @@ def get_company():
 """)
     
     rows = cur.fetchall()
+
+    cur.close()
+    conn.close()
 
     companies = []
 

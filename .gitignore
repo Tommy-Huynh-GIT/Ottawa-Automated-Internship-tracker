@@ -6,3 +6,6 @@ POSTGRES.TXT
 venv/
 
 .env
+
+frontend/node_modules/
+frontend/dist/
