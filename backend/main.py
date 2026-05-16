@@ -38,6 +38,7 @@ def get_jobs(company: str | None = None):
     jobs = []
 
     for row in rows:
+        #used object here because returning job with multiple details
         jobs.append({
             "id": row[0], #first index in the tuple is id and vice versa
             "link" : row[1],
@@ -67,9 +68,7 @@ def get_company():
     companies = []
 
     for row in rows:
-        companies.append({
-            "company" : row[0]
-        })
-
+        #used list instead of an object because just returning many things with no details
+        companies.append(row[0])
     return companies
 
