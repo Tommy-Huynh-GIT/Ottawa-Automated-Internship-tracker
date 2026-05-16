@@ -7,7 +7,7 @@ from database.postgres import get_connection
 
 app = FastAPI()
 
-#Need this since my backend and frontend run on different ports
+#Added this since my backend and frontend run on different ports
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
