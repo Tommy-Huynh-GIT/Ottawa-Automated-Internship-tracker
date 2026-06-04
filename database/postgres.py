@@ -2,6 +2,7 @@ import psycopg2
 from dotenv import load_dotenv
 import os
 from pathlib import Path
+from notifications import notify_new_job
 
 #load environemnt vars
 load_dotenv()
@@ -60,11 +61,16 @@ def save_job(link, title, company):
         INSERT INTO job (link, title, company)
         VALUES (%s, %s, %s) 
         ON CONFLICT (link) DO NOTHING
+        RETURNING id
         """,
         (link, title, company)
     )
 
+    inserted_job = cur.fetchone()
     conn.commit()
 
     cur.close()
     conn.close()
+
+    if inserted_job:
+        notify_new_job(link, title, company)
