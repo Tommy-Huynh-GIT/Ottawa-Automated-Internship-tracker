@@ -9,6 +9,7 @@ This app scrapes internship postings from selected company career sites, stores 
 - Scrapes internship and student job postings from company career pages
 - Stores job title, company, and job link in PostgreSQL
 - Avoids duplicate job entries by using each job link as a unique value
+- Sends optional phone notifications when a brand new job is found
 - Provides read-only API routes for jobs and companies
 - Displays jobs in a React frontend with a company dropdown filter
 
@@ -53,6 +54,7 @@ SeleniumStuff/
 Selenium scraper
   -> finds internship postings
   -> saves jobs into PostgreSQL
+  -> sends a phone notification for newly inserted jobs
 
 FastAPI backend
   -> reads jobs from PostgreSQL
@@ -96,14 +98,45 @@ DB_PORT=5432
 NTFY_TOPIC=ottawainternships_alert
 ```
 
-`NTFY_TOPIC` is optional. If it is set, the scraper sends a phone notification
-through ntfy when a brand new job is inserted into the database. Duplicate jobs
-do not send another alert.
+## Phone Notifications
 
-To receive alerts on your phone, install the ntfy app and subscribe to the same
-topic name you put in `.env`.
+Phone notifications are handled through [ntfy](https://ntfy.sh/). This is
+optional; if `NTFY_TOPIC` is missing from `.env`, the scraper still saves jobs
+but does not send phone alerts.
+
+To enable alerts:
+
+1. Install the ntfy app on your phone.
+2. Subscribe to the same topic name you put in `.env`.
+3. Run the scraper normally.
+
+When the scraper finds a matching job, PostgreSQL tries to insert the job link.
+If the link is new, the insert succeeds and a phone notification is sent. If the
+link already exists in the database, PostgreSQL ignores it and no duplicate
+notification is sent.
+
+The example topic is:
+
+```env
+NTFY_TOPIC=ottawainternships_alert
+```
+
+For privacy, use a harder-to-guess topic name before relying on this long term.
+Anyone who knows the topic name can subscribe to it.
 
 ## Running The Project
+
+Run the scraper from the project root:
+
+```powershell
+python main.py
+```
+
+Or use the batch runner, which also writes output to `logs/scraper.log`:
+
+```powershell
+.\run_scraper.bat
+```
 
 Start the backend from the project root:
 
