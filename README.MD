@@ -93,7 +93,15 @@ DB_NAME=your_database_name
 DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 DB_PORT=5432
+NTFY_TOPIC=ottawainternships_alert
 ```
+
+`NTFY_TOPIC` is optional. If it is set, the scraper sends a phone notification
+through ntfy when a brand new job is inserted into the database. Duplicate jobs
+do not send another alert.
+
+To receive alerts on your phone, install the ntfy app and subscribe to the same
+topic name you put in `.env`.
 
 ## Running The Project
 
