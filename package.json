@@ -1,0 +1,26 @@
+{
+  "name": "ottawa-automated-internship-tracker",
+  "version": "1.0.0",
+  "description": "I built this project after finding that internship postings in Ottawa were scattered across different company career pages and hard to track in one place.",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tommy-Huynh-GIT/Ottawa-Automated-Internship-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Tommy-Huynh-GIT/Ottawa-Automated-Internship-tracker/issues"
+  },
+  "homepage": "https://github.com/Tommy-Huynh-GIT/Ottawa-Automated-Internship-tracker#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3"
+  }
+}

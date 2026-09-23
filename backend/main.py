@@ -33,12 +33,21 @@ def get_jobs(company: str | None = None):
     if company:
         #select specific company
         cur.execute(
-            """SELECT * FROM job WHERE company = %s""",
+            """
+            SELECT id, link, title, company, application_status, application_notes, applied_at
+            FROM job
+            WHERE company = %s
+            """,
             (company,)
         )
     else:
         #select all jobs
-        cur.execute("""SELECT * from job""")
+        cur.execute(
+            """
+            SELECT id, link, title, company, application_status, application_notes, applied_at
+            FROM job
+            """
+        )
 
     #collect all the jobs
     rows = cur.fetchall()
@@ -54,7 +63,10 @@ def get_jobs(company: str | None = None):
             "id": row[0], #first index in the tuple is id and vice versa
             "link" : row[1],
             "title": row[2],
-            "company": row[3]
+            "company": row[3],
+            "application_status": row[4],
+            "application_notes": row[5],
+            "applied_at": row[6],
         })
 
     return jobs

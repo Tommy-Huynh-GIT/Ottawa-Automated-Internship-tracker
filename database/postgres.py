@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from notifications import notify_new_job
 
-#load environemnt vars
+#load environment vars
 load_dotenv()
 
 
@@ -26,7 +26,7 @@ def get_connection():
         port=DB_PORT
     )
 
-#
+#main will call this once to create the table
 def create_tables():
     conn = get_connection()
     #used to execute commands
@@ -38,10 +38,16 @@ def create_tables():
             id SERIAL PRIMARY KEY,
             link TEXT UNIQUE,
             title TEXT,
-            company VARCHAR(255)
+            company VARCHAR(255),
+            application_status VARCHAR(50) DEFAULT 'not_started',
+            application_notes TEXT,
+            applied_at TIMESTAMP
         )
         """
     )
+    cur.execute("ALTER TABLE job ADD COLUMN IF NOT EXISTS application_status VARCHAR(50) DEFAULT 'not_started'")
+    cur.execute("ALTER TABLE job ADD COLUMN IF NOT EXISTS application_notes TEXT")
+    cur.execute("ALTER TABLE job ADD COLUMN IF NOT EXISTS applied_at TIMESTAMP")
     #used to commit actions to database
     conn.commit()
 
@@ -50,7 +56,7 @@ def create_tables():
     conn.close()
 
 
-#Scrappers will call this so we can push to database 
+#Scrapers will call this so we can push to database
 def save_job(link, title, company):
     conn = get_connection()
     cur = conn.cursor()
@@ -61,12 +67,25 @@ def save_job(link, title, company):
         INSERT INTO job (link, title, company)
         VALUES (%s, %s, %s) 
         ON CONFLICT (link) DO NOTHING
-        RETURNING id
+        RETURNING id, link, title, company, application_status
         """,
         (link, title, company)
     )
 
-    inserted_job = cur.fetchone()
+    row = cur.fetchone()
+    inserted_job = row is not None
+
+    if row is None:
+        cur.execute(
+            """
+            SELECT id, link, title, company, application_status
+            FROM job
+            WHERE link = %s
+            """,
+            (link,)
+        )
+        row = cur.fetchone()
+
     conn.commit()
 
     cur.close()
@@ -74,3 +93,32 @@ def save_job(link, title, company):
 
     if inserted_job:
         notify_new_job(link, title, company)
+
+    return {
+        "id": row[0],
+        "link": row[1],
+        "title": row[2],
+        "company": row[3],
+        "application_status": row[4],
+    }
+
+
+def update_application_status(job_id, status, notes=None):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        UPDATE job
+        SET application_status = %s,
+            application_notes = %s,
+            applied_at = CASE WHEN %s = 'submitted' THEN NOW() ELSE applied_at END
+        WHERE id = %s
+        """,
+        (status, notes, status, job_id)
+    )
+
+    conn.commit()
+
+    cur.close()
+    conn.close()

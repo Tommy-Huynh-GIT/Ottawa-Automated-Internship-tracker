@@ -1,54 +1,37 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 from constants import KEYWORDS
-#imported data set from sites.py
-from sites import sites
-from database.postgres import save_job
 
 
-from scrapers.general import generalScrapper
-from scrapers.icims import icims
-
-
-
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-
-def oracle(driver, company):
+async def oracle(page, company):
     print(f"NOW SCRAPING {company}!")
     print("====================================")
 
-    if company == "Nokia":
+    jobs = []
 
-        #wait for all links
-        WebDriverWait(driver, 20).until(
-            EC.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, "a.job-grid-item__link")
-            )
-        )
+    if company in ["Nokia", "Ross Video"]:
+        job_links = page.locator("a.job-grid-item__link")
 
-        job_links = driver.find_elements(
-            By.CSS_SELECTOR,
-            "a.job-grid-item__link"
-        )
+        await job_links.first.wait_for(timeout=20000)
+        count = await job_links.count()
 
-        for job in job_links:
+        for index in range(count):
+            job = job_links.nth(index)
 
-            #this gives us an id to find an element that has the text, 
-            labelled_by = job.get_attribute("aria-labelledby")
-            #This element holds the text for the current job
-            title_element = driver.find_element(By.ID, labelled_by)
+            # This gives us an id for the element that holds the job title.
+            labelled_by = await job.get_attribute("aria-labelledby")
+            title = ""
 
-            title = title_element.text.strip()
-            link = job.get_attribute("href")
+            if labelled_by:
+                title_element = page.locator(f"[id='{labelled_by}']")
+                title = (await title_element.inner_text()).strip()
+
+            link = await job.get_attribute("href")
 
             if title and link:
                 if KEYWORDS.search(title):
-                    #Push to database
-                    save_job(link,title, company)
-                
+                    jobs.append({
+                        "title": title,
+                        "link": link,
+                        "company": company,
+                    })
 
-            
-
-   
+    return jobs

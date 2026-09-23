@@ -1,45 +1,32 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 from constants import KEYWORDS
-from database.postgres import save_job
 
 
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-def icims(driver, company):
+async def icims(page, company):
     print(f"NOW SCRAPING {company}!")
     print("====================================")
+
+    jobs = []
+
     if company == "Kinaxis":
-      #load iframe first, check for 20 seconds until it exists
-        iframe = WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.ID, "icims_content_iframe"))
-        )
+        frame = page.frame_locator("#icims_content_iframe")
+        job_links = frame.locator("a[href*='/jobs/'][href*='/job']")
 
-        #switch to iframe from main page
-        driver.switch_to.frame(iframe)
+        await job_links.first.wait_for(timeout=20000)
+        count = await job_links.count()
 
-        #wait until all anchor tags exist inside the iframe
-        WebDriverWait(driver, 20).until(
-            EC.presence_of_all_elements_located((By.TAG_NAME, "a"))
-        )
+        print("Kinaxis jobs found:", count)
 
-        #find all elements with /jobs/ or /job/ in the link
-        job_links = driver.find_elements(
-            By.CSS_SELECTOR,
-            "a[href*='/jobs/'][href*='/job']"
-        )
+        for index in range(count):
+            job = job_links.nth(index)
+            title = (await job.inner_text()).replace("Title", "").strip()
+            link = await job.get_attribute("href")
 
-        print("Kinaxis jobs found:", len(job_links))
+            if title and link:
+                if KEYWORDS.search(title):
+                    jobs.append({
+                        "title": title,
+                        "link": link,
+                        "company": company,
+                    })
 
-
-        #loop through job links
-        for job in job_links:
-            #replace title with blank space and remove any trailing space, new line
-            title = job.text.replace("Title", "").strip()
-            link = job.get_attribute("href")
-
-
-            if KEYWORDS.search(title):
-                #Push to database
-                save_job(link, title, company)
+    return jobs

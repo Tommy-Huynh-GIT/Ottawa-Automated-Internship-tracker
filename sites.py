@@ -68,5 +68,11 @@ sites = [
         "company": "Knak",
         "platform": "Custom",
         "url": "https://knak.com/careers/#current-openings"
+    },
+
+    {
+        "company": "Cisco",
+        "platform": "Custom",
+        "url": "https://careers.cisco.com/global/en/internships-and-co-ops"
     }
 ]

@@ -97,6 +97,8 @@ function App() {
             <article className="job" key={job.id}>
               <h3>{job.title}</h3>
               <p>{job.company}</p>
+              <p className="status">{job.application_status?.replaceAll("_", " ")}</p>
+              {job.application_notes && <p className="notes">{job.application_notes}</p>}
               <a href={job.link} target="_blank" rel="noreferrer">
                 Open job
               </a>
