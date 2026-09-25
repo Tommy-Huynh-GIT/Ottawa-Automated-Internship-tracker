@@ -1,7 +1,8 @@
 from constants import KEYWORDS
+from scrapers.links import is_likely_job_link, normalize_job_link
 
 
-async def general_scraper(page, company):
+async def general_scraper(page, company, location_keywords=None):
     print(f"NOW SCRAPING {company}!")
     print("====================================")
 
@@ -22,9 +23,14 @@ async def general_scraper(page, company):
     for index in range(count):
         job = job_links.nth(index)
         title = (await job.inner_text()).strip()
-        link = await job.get_attribute("href")
+        link = normalize_job_link(await job.get_attribute("href"), page.url)
 
-        if title and link:
+        if title and link and is_likely_job_link(link):
+            if location_keywords and not any(
+                keyword.casefold() in title.casefold() for keyword in location_keywords
+            ):
+                continue
+
             if company == "Cisco" and "Canada" not in title:
                 continue
 

@@ -1,7 +1,8 @@
 from constants import KEYWORDS
+from scrapers.links import normalize_job_link
 
 
-async def oracle(page, company):
+async def oracle(page, company, location_keywords=None):
     print(f"NOW SCRAPING {company}!")
     print("====================================")
 
@@ -11,6 +12,7 @@ async def oracle(page, company):
         job_links = page.locator("a.job-grid-item__link")
 
         await job_links.first.wait_for(timeout=20000)
+
         count = await job_links.count()
 
         for index in range(count):
@@ -24,7 +26,7 @@ async def oracle(page, company):
                 title_element = page.locator(f"[id='{labelled_by}']")
                 title = (await title_element.inner_text()).strip()
 
-            link = await job.get_attribute("href")
+            link = normalize_job_link(await job.get_attribute("href"), page.url)
 
             if title and link:
                 if KEYWORDS.search(title):

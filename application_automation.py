@@ -6,6 +6,8 @@ from re import Pattern
 
 from playwright.async_api import Error as PlaywrightError
 from playwright.async_api import Page, TimeoutError as PlaywrightTimeoutError
+from scrapers.links import is_trusted_job_url
+from sites import sites
 
 
 APPLY_TEXT = r"apply|apply now|start application|submit application"
@@ -39,12 +41,41 @@ class ApplicationAutomator:
 
     async def apply_to_job(self, page: Page, job):
         try:
+            if not self._is_trusted_job(job):
+                return ApplicationResult(
+                    "failed",
+                    "Stopped before navigation because the stored job URL is untrusted.",
+                )
+
             await page.goto(job["link"], wait_until="domcontentloaded", timeout=60000)
+            if not is_trusted_job_url(page.url, job["link"], allow_trusted_ats=False):
+                return ApplicationResult(
+                    "failed",
+                    "Stopped before form interaction because the job page redirected to an untrusted host.",
+                )
+
             await self._settle(page)
             page = await self._open_apply_flow(page)
+            if not is_trusted_job_url(page.url, job["link"], allow_trusted_ats=False):
+                return ApplicationResult(
+                    "failed",
+                    "Stopped before form interaction because the application page is untrusted.",
+                )
+
             await self._settle(page)
+            if not is_trusted_job_url(page.url, job["link"], allow_trusted_ats=False):
+                return ApplicationResult(
+                    "failed",
+                    "Stopped before form interaction because the application page changed hosts.",
+                )
 
             filled_fields = await self._fill_common_fields(page)
+            if not is_trusted_job_url(page.url, job["link"], allow_trusted_ats=False):
+                return ApplicationResult(
+                    "failed",
+                    "Stopped before resume upload because the application page changed hosts.",
+                )
+
             await self._upload_resume(page)
 
             if self.submit:
@@ -130,8 +161,27 @@ class ApplicationAutomator:
             return False
 
         path = Path(resume_path)
+        allowed_root = Path(os.getenv("APPLICANT_DOCUMENTS_DIR", "artifacts")).resolve()
 
-        if not path.exists():
+        if not path.is_file() or path.suffix.casefold() not in {".pdf", ".doc", ".docx"}:
+            return False
+
+        try:
+            path.resolve().relative_to(allowed_root)
+        except ValueError:
+            return False
+
+        if path.stat().st_size > 10 * 1024 * 1024:
+            return False
+
+        with path.open("rb") as resume_file:
+            signature = resume_file.read(4)
+
+        if path.suffix.casefold() == ".pdf" and signature != b"%PDF":
+            return False
+        if path.suffix.casefold() == ".doc" and signature != b"\xd0\xcf\x11\xe0":
+            return False
+        if path.suffix.casefold() == ".docx" and signature != b"PK\x03\x04":
             return False
 
         file_input = page.locator("input[type='file']").first
@@ -143,13 +193,14 @@ class ApplicationAutomator:
         return True
 
     async def _click_submit(self, page):
-        submit_button = page.get_by_role("button", name=self._regex(r"submit|send application")).first
+        return False
 
-        if await submit_button.count() == 0:
-            return False
-
-        await submit_button.click(timeout=5000)
-        return True
+    def _is_trusted_job(self, job):
+        return any(
+            site["company"] == job.get("company")
+            and is_trusted_job_url(job.get("link", ""), site["url"], allow_trusted_ats=False)
+            for site in sites
+        )
 
     async def _screenshot(self, page, job):
         safe_title = "".join(char for char in job["title"][:60] if char.isalnum() or char in [" ", "-"]).strip()

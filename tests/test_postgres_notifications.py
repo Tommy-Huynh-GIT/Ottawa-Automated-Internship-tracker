@@ -8,13 +8,19 @@ class FakeCursor:
     def __init__(self, inserted_job):
         self.inserted_job = inserted_job
         self.executed_sql = ""
+        self.execute_count = 0
 
     def execute(self, sql, params):
         self.executed_sql = sql
         self.params = params
+        self.execute_count += 1
 
     def fetchone(self):
-        return (1,) if self.inserted_job else None
+        if self.inserted_job and self.execute_count == 1:
+            return (1, "https://example.com/job/1", "software intern", "Example Co", "new")
+        if not self.inserted_job and self.execute_count == 1:
+            return None
+        return (1, "https://example.com/job/1", "software intern", "Example Co", "new")
 
     def close(self):
         pass

@@ -7,6 +7,7 @@ from application_automation import ApplicationAutomator, load_applicant_profile
 from database.postgres import create_tables, save_job, update_application_status
 from scrapers.general import general_scraper
 from scrapers.icims import icims
+from scrapers.links import is_trusted_job_url
 from scrapers.oracle import oracle
 from sites import sites
 
@@ -34,6 +35,10 @@ async def scrape_site(page, site):
     url = site["url"]
     scraper = SCRAPERS.get(platform, general_scraper)
 
+    if not is_trusted_job_url(url, url):
+        print(f"Skipped {company}: source URL is not a trusted HTTPS URL")
+        return []
+
     await page.goto(url, wait_until="domcontentloaded", timeout=60000)
 
     try:
@@ -41,7 +46,11 @@ async def scrape_site(page, site):
     except PlaywrightTimeoutError:
         pass
 
-    return await scraper(page, company)
+    if not is_trusted_job_url(page.url, url):
+        print(f"Skipped {company}: redirected to an untrusted host ({page.url})")
+        return []
+
+    return await scraper(page, company, site.get("location_keywords"))
 
 
 async def main():
