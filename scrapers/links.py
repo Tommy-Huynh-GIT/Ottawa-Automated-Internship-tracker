@@ -1,6 +1,7 @@
 from urllib.parse import urljoin, urlparse
 
 TRUSTED_ATS_HOSTS = {
+    "bamboohr.com",
     "careers.smartrecruiters.com",
     "greenhouse.io",
     "icims.com",
@@ -10,6 +11,7 @@ TRUSTED_ATS_HOSTS = {
     "myworkdayjobs.com",
     "oraclecloud.com",
     "successfactors.com",
+    "ultipro.ca",
     "workable.com",
 }
 

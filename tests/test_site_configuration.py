@@ -44,6 +44,20 @@ EXPECTED_KANATA_COMPANIES = {
     "Kongsberg Geospatial",
 }
 
+EXPECTED_DEEP_CAREER_URLS = {
+    "Solace": "https://solace.bamboohr.com/careers",
+    "MDA Space": "https://recruiting.ultipro.ca/MAC5000MCDW/JobBoard/7667adcc-47ae-477a-9183-0d8ef8bc0748/?q=&o=postedDateDesc",
+    "Telesat": "https://www.telesat.com/careers/jobs/",
+    "Calian": "https://careers.calian.com/careers/",
+    "Assent": "https://www.assent.com/company/careers/search/",
+    "Thales Canada": "https://careers.thalesgroup.com/global/en/studentandgraduates2",
+    "N-able": "https://careers.n-able.com/jobs",
+    "Juniper Networks": "https://careers.hpe.com/us/en/networking-jobs",
+    "Wind River": "https://www.windriver.com/company/careers",
+    "Ribbon Communications": "https://vhr-genband.wd1.myworkdayjobs.com/ribboncareers",
+    "Skyworks Solutions": "https://careers.skyworksinc.com/",
+}
+
 
 class SiteConfigurationTests(unittest.TestCase):
     def test_requested_ottawa_companies_are_configured(self):
@@ -73,6 +87,12 @@ class SiteConfigurationTests(unittest.TestCase):
 
     def test_every_configured_platform_has_an_explicit_scraper(self):
         self.assertTrue({site["platform"] for site in sites} <= set(SCRAPERS))
+
+    def test_deep_career_pages_are_configured(self):
+        configured_urls = {site["company"]: site["url"] for site in sites}
+
+        for company, expected_url in EXPECTED_DEEP_CAREER_URLS.items():
+            self.assertEqual(configured_urls[company], expected_url)
 
 
 if __name__ == "__main__":

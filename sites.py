@@ -18,7 +18,7 @@ sites = [
     {
         "company": "Solace",
         "platform": "Custom",
-        "url": "https://solace.com/careers/"
+        "url": "https://solace.bamboohr.com/careers"
     },
 
     {
@@ -85,19 +85,19 @@ sites = [
     {
         "company": "MDA Space",
         "platform": "Custom",
-        "url": "https://mda.space/careers/"
+        "url": "https://recruiting.ultipro.ca/MAC5000MCDW/JobBoard/7667adcc-47ae-477a-9183-0d8ef8bc0748/?q=&o=postedDateDesc"
     },
 
     {
         "company": "Telesat",
         "platform": "Custom",
-        "url": "https://www.telesat.com/careers/"
+        "url": "https://www.telesat.com/careers/jobs/"
     },
 
     {
         "company": "Calian",
         "platform": "Custom",
-        "url": "https://careers.calian.com/"
+        "url": "https://careers.calian.com/careers/"
     },
 
     {
@@ -109,7 +109,7 @@ sites = [
     {
         "company": "Thales Canada",
         "platform": "Custom",
-        "url": "https://careers.thalesgroup.com/global/en/search-results"
+        "url": "https://careers.thalesgroup.com/global/en/studentandgraduates2"
     },
 
     {
@@ -133,13 +133,13 @@ sites = [
     {
         "company": "N-able",
         "platform": "Custom",
-        "url": "https://careers.n-able.com/"
+        "url": "https://careers.n-able.com/jobs"
     },
 
     {
         "company": "Assent",
         "platform": "Custom",
-        "url": "https://www.assent.com/careers"
+        "url": "https://www.assent.com/company/careers/search/"
     },
 
     {
@@ -201,7 +201,7 @@ sites = [
     {
         "company": "Juniper Networks",
         "platform": "Custom",
-        "url": "https://careers.hpe.com/juniper",
+        "url": "https://careers.hpe.com/us/en/networking-jobs",
         "location_keywords": ["Ottawa", "Kanata"]
     },
 
@@ -215,14 +215,14 @@ sites = [
     {
         "company": "Ribbon Communications",
         "platform": "Custom",
-        "url": "https://ribboncommunications.com/company/careers",
+        "url": "https://vhr-genband.wd1.myworkdayjobs.com/ribboncareers",
         "location_keywords": ["Ottawa", "Kanata"]
     },
 
     {
         "company": "Skyworks Solutions",
         "platform": "Custom",
-        "url": "https://www.skyworksinc.com/en/Careers",
+        "url": "https://careers.skyworksinc.com/",
         "location_keywords": ["Ottawa", "Kanata"]
     },
 
