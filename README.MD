@@ -43,6 +43,7 @@ Ottawa-Automated-Internship-tracker/
   scrapers/
     general.py
     icims.py
+    links.py
     oracle.py
 
   application_automation.py
@@ -51,6 +52,22 @@ Ottawa-Automated-Internship-tracker/
   sites.py
   constants.py
 ```
+
+## Sources
+
+The tracker covers Ottawa and Kanata technology, telecom, aerospace, defence,
+software, and research employers. Sources include Nokia, Kinaxis, Ciena, Cisco,
+Ericsson, Solace, MDA Space, Telesat, Calian, ADGA, Thales, Lockheed Martin,
+BlackBerry/QNX, Ross Video, March Networks, Ranovus, thinkRF, Wind River,
+Ribbon Communications, Skyworks, Semtech, Microchip, Synopsys, Keysight,
+Amdocs, Pythian, L3Harris, Kongsberg Geospatial, TrendAI, NRC, CSE, and other
+Ottawa-area employers.
+
+Where available, sources point directly to internship, co-op, student, or job
+search pages. For example, MDA Space uses its co-op/student board and Thales
+uses its Students and Graduates page. Some companies currently expose only a
+general careers page and may return zero matching postings until an internship
+is published.
 
 ## How It Works
 
@@ -148,6 +165,26 @@ Run the scraper from the project root:
 
 ```powershell
 python main.py
+```
+
+Run the Python tests:
+
+```powershell
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+Run the TrendAI browser smoke test in a visible Chromium window:
+
+```powershell
+npx playwright test tests/trendai.spec.ts --project=chromium --headed
+```
+
+The full browser smoke run opens every configured source and exercises its
+assigned scraper. It is a read-only diagnostic and does not write jobs to
+PostgreSQL:
+
+```powershell
+python tests/browser_smoke.py --headed
 ```
 
 Optional automation controls:
