@@ -280,5 +280,11 @@ sites = [
         "platform": "Custom",
         "url": "https://www.kongsberg.com/careers/",
         "location_keywords": ["Ottawa", "Kanata"]
+    },
+
+    {
+        "company": "TrendAI",
+        "platform": "Custom",
+        "url": "https://www.trendai.ca/"
     }
 ]

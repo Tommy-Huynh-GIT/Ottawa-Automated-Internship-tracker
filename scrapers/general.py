@@ -1,4 +1,5 @@
 from constants import KEYWORDS
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 from scrapers.links import is_likely_job_link, normalize_job_link
 
 
@@ -22,8 +23,11 @@ async def general_scraper(page, company, location_keywords=None):
 
     for index in range(count):
         job = job_links.nth(index)
-        title = (await job.inner_text()).strip()
-        link = normalize_job_link(await job.get_attribute("href"), page.url)
+        try:
+            title = (await job.inner_text()).strip()
+            link = normalize_job_link(await job.get_attribute("href"), page.url)
+        except PlaywrightTimeoutError:
+            continue
 
         if title and link and is_likely_job_link(link):
             if location_keywords and not any(

@@ -24,6 +24,7 @@ EXPECTED_NEW_COMPANIES = {
     "Ottawa Hospital Research Institute",
     "National Research Council Canada",
     "Communications Security Establishment",
+    "TrendAI",
 }
 
 EXPECTED_KANATA_COMPANIES = {

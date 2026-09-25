@@ -1,4 +1,5 @@
 from constants import KEYWORDS
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 from scrapers.links import normalize_job_link
 
 
@@ -11,7 +12,11 @@ async def oracle(page, company, location_keywords=None):
     if company in ["Nokia", "Ross Video"]:
         job_links = page.locator("a.job-grid-item__link")
 
-        await job_links.first.wait_for(timeout=20000)
+        try:
+            await job_links.first.wait_for(timeout=20000)
+        except PlaywrightTimeoutError:
+            print(f"No Oracle job links found for {company}.")
+            return jobs
 
         count = await job_links.count()
 
